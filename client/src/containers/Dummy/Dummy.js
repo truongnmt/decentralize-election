@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from '../../store/actions/dapp';
 
@@ -13,8 +12,8 @@ class Dummy extends Component {
     //     contract: null
     // };
 
-    componentDidMount = () => {
-        this.props.onInitDapp();
+    componentWillMount = () => {
+        this.props.onInitWeb3AccountContract();
     };
 
     incrementStorageValueHandler = () => {
@@ -29,7 +28,7 @@ class Dummy extends Component {
                 .on('confirmation', (confirmationNumber) => {
                     // TODO if (confirmationNumber === 5) {} ???
                     contract.methods.get().call().then(response => {
-                        this.props.setStorageValue(response.toNumber());
+                        // this.props.setStorageValue(response.toNumber());
                     });
                 })
                 .on('error', (error) => {
@@ -39,20 +38,29 @@ class Dummy extends Component {
     };
 
     render() {
-        if (!this.props.web3) {
+        console.log(this.props.candidatesCount);
+        if (this.props.candidatesCount === 0) {
             return <Spinner />;
         }
         return (
-            <div className="App">
-                <h1>Good to Go!</h1>
-                <p>Your Truffle Box is installed and ready.</p>
-                <h2>Smart Contract Example</h2>
-                <p>
-                    If your contracts compiled and migrated successfully, below will show
-                    a stored a number.
-                </p>
-                <Button btnType="Success" clicked={this.incrementStorageValueHandler}>ADD</Button>
-                <div>The stored value is: {this.props.storageValue}</div>
+            <div>
+                <h3>Election Results</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Votes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <hr />
+
+                {/* <Button btnType="Success" clicked={this.incrementStorageValueHandler}>ADD</Button> */}
+                {/* <div>The stored value is: {this.props.storageValue}</div> */}
             </div>
         );
     }
@@ -60,17 +68,18 @@ class Dummy extends Component {
 
 const mapStateToProps = state => {
     return {
-        storageValue: state.storageValue,
-        web3: state.web3,
-        accounts: state.accounts,
-        contract: state.contract
+        web3: null,
+        accounts: null,
+        contract: null,
+        candidates: [],
+        candidatesCount: 0
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onInitDapp: () => dispatch(actions.initWeb3AccountContract()),
-        setStorageValue: (updatedStorageValue) => dispatch(actions.setStorageValue(updatedStorageValue))
+        onInitWeb3AccountContract: () => dispatch(actions.initWeb3AccountContract()),
+        onFetchCandidates: () => dispatch(actions.fetchCandidates())
     }
 }
 

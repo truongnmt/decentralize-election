@@ -1,10 +1,11 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    storageValue: 0,
     web3: null,
     accounts: null,
-    contract: null
+    contract: null,
+    candidates: [],
+    candidatesCount: 0
 }
 
 const reducer = (state = initialState, action) => {
@@ -24,10 +25,15 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 contract: action.contract
             };
-        case actionTypes.SET_STORAGE_VALUE:
+        case actionTypes.SET_CANDIDATES:
             return {
                 ...state,
-                storageValue: action.storageValue
+                candidates: action.candidates
+            };
+        case actionTypes.SET_CANDIDATES_COUNT:
+            return {
+                ...state,
+                candidatesCount: action.candidatesCount
             };
         default:
             return state;
