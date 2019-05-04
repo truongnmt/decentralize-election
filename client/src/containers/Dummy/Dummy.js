@@ -18,7 +18,7 @@ class Dummy extends Component {
     };
 
     incrementStorageValueHandler = () => {
-        const { accounts, contract } = this.state;
+        const { accounts, contract } = this.props;
 
         contract.methods.get().call().then(currentValue => {
             // Stores a given value
@@ -29,7 +29,7 @@ class Dummy extends Component {
                 .on('confirmation', (confirmationNumber) => {
                     // TODO if (confirmationNumber === 5) {} ???
                     contract.methods.get().call().then(response => {
-                        this.setState({ storageValue: response.toNumber() });
+                        this.props.setStorageValue(response.toNumber());
                     });
                 })
                 .on('error', (error) => {
@@ -39,7 +39,7 @@ class Dummy extends Component {
     };
 
     render() {
-        if (!this.state.web3) {
+        if (!this.props.web3) {
             return <Spinner />;
         }
         return (
@@ -51,9 +51,8 @@ class Dummy extends Component {
                     If your contracts compiled and migrated successfully, below will show
                     a stored a number.
                 </p>
-                {/* <Button btnType="Success" clicked={this.incrementStorageValueHandler}>ADD</Button> */}
-                <Button btnType="Success">ADD</Button>
-                <div>The stored value is: {this.state.storageValue}</div>
+                <Button btnType="Success" clicked={this.incrementStorageValueHandler}>ADD</Button>
+                <div>The stored value is: {this.props.storageValue}</div>
             </div>
         );
     }
@@ -61,16 +60,17 @@ class Dummy extends Component {
 
 const mapStateToProps = state => {
     return {
-        storageValue: state.dapp.storageValue,
-        web3: state.dapp.web3,
-        accounts: state.dapp.accounts,
-        contract: state.dapp.contract
+        storageValue: state.storageValue,
+        web3: state.web3,
+        accounts: state.accounts,
+        contract: state.contract
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onInitDapp: () => dispatch(actions.initWeb3AccountContract())
+        onInitDapp: () => dispatch(actions.initWeb3AccountContract()),
+        setStorageValue: (updatedStorageValue) => dispatch(actions.setStorageValue(updatedStorageValue))
     }
 }
 
