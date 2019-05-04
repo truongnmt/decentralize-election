@@ -1,52 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
-import SimpleStorageContract from "../../contracts/SimpleStorage.json";
-import getWeb3 from "../../utils/getWeb3";
+import * as actions from '../../store/actions/dapp';
 
 class Dummy extends Component {
-    state = {
-        storageValue: 0,
-        web3: null,
-        accounts: null,
-        contract: null
-    };
+    // state = {
+    //     storageValue: 0,
+    //     web3: null,
+    //     accounts: null,
+    //     contract: null
+    // };
 
-    componentDidMount = async () => {
-        try {
-            // Get network provider and web3 instance.
-            const web3 = await getWeb3();
-
-            // Use web3 to get the user's accounts.
-            const accounts = await web3.eth.getAccounts();
-
-            // Get the contract instance.
-            const networkId = await web3.eth.net.getId();
-            const deployedNetwork = SimpleStorageContract.networks[networkId];
-            const instance = new web3.eth.Contract(
-                SimpleStorageContract.abi,
-                deployedNetwork && deployedNetwork.address,
-            );
-
-            // Get the contract storageValue
-            const storageValue = await instance.methods.get().call();
-
-            // Set web3, accounts, and contract to the state, and then proceed with an
-            // example of interacting with the contract's methods.
-            this.setState({
-                storageValue: storageValue.toNumber(),
-                web3: web3,
-                accounts: accounts,
-                contract: instance
-            });
-        } catch (error) {
-            // Catch any errors for any of the above operations.
-            alert(
-                `Failed to load web3, accounts, or contract. Check console for details.`,
-            );
-            console.error(error);
-        }
+    componentDidMount = () => {
+        this.props.onInitDapp();
     };
 
     incrementStorageValueHandler = () => {
@@ -83,11 +51,27 @@ class Dummy extends Component {
                     If your contracts compiled and migrated successfully, below will show
                     a stored a number.
                 </p>
-                <Button btnType="Success" clicked={this.incrementStorageValueHandler}>ADD</Button>
+                {/* <Button btnType="Success" clicked={this.incrementStorageValueHandler}>ADD</Button> */}
+                <Button btnType="Success">ADD</Button>
                 <div>The stored value is: {this.state.storageValue}</div>
             </div>
         );
     }
 }
 
-export default Dummy;
+const mapStateToProps = state => {
+    return {
+        storageValue: state.dapp.storageValue,
+        web3: state.dapp.web3,
+        accounts: state.dapp.accounts,
+        contract: state.dapp.contract
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onInitDapp: () => dispatch(actions.initWeb3AccountContract())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dummy);
