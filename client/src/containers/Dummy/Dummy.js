@@ -5,15 +5,10 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from '../../store/actions/dapp';
 
 class Dummy extends Component {
-    // state = {
-    //     storageValue: 0,
-    //     web3: null,
-    //     accounts: null,
-    //     contract: null
-    // };
 
     componentWillMount = () => {
         this.props.onInitWeb3AccountContract();
+        // this.props.onFetchCandidates();
     };
 
     incrementStorageValueHandler = () => {
@@ -38,10 +33,28 @@ class Dummy extends Component {
     };
 
     render() {
-        console.log(this.props.candidatesCount);
         if (this.props.candidatesCount === 0) {
             return <Spinner />;
         }
+
+        let candidates = this.props.candidates.map(candidate => {
+            return (
+                <tr key={candidate.id}>
+                    <td>{candidate.id}</td>
+                    <td>{candidate.name}</td>
+                    <td>{candidate.voteCount}</td>
+                </tr>
+            );
+        });
+
+        // for (let candidate of this.props.candidates) {
+        //     console.log(candidate);
+        // }
+
+        // for (let i = 1; i <= this.props.candidatesCount; i++) {
+        //     candidates = this.props.candidates[i];
+        // }
+
         return (
             <div>
                 <h3>Election Results</h3>
@@ -54,7 +67,7 @@ class Dummy extends Component {
                         </tr>
                     </thead>
                     <tbody>
-
+                        {candidates}
                     </tbody>
                 </table>
                 <hr />
@@ -67,12 +80,14 @@ class Dummy extends Component {
 }
 
 const mapStateToProps = state => {
+    // console.log("state:");
+    // console.log(state);
     return {
-        web3: null,
-        accounts: null,
-        contract: null,
-        candidates: [],
-        candidatesCount: 0
+        web3: state.web3,
+        accounts: state.accounts,
+        contract: state.contract,
+        candidates: state.candidates,
+        candidatesCount: state.candidatesCount
     };
 }
 

@@ -63,15 +63,13 @@ export const initWeb3AccountContract = () => {
                         const candidates = [];
                         for (let i = 1; i <= candidatesCount.toNumber(); i++) {
                             instance.methods.candidates(i).call().then(candidate => {
-                                console.log(candidate[1]);
                                 candidates.push({
-                                    id: candidates[0],
-                                    name: candidates[1],
-                                    voteCount: candidates[2]
+                                    id: candidate[0],
+                                    name: candidate[1],
+                                    voteCount: candidate[2]
                                 });
-                            })
+                            });
                         }
-                        console.log(candidates);
                         dispatch(setCandidates(candidates));
                     }).catch(error => {
                         // TODO dispatch(fetchStorageValueFailed());
@@ -104,12 +102,25 @@ export const fetchCandidates = () => {
             for (let i = 1; i <= candidatesCount.toNumber(); i++) {
                 contract.methods.candidates(i).call().then(candidate => {
                     candidates.push({
-                        id: candidates[0],
-                        name: candidates[1],
-                        voteCount: candidates[2]
+                        id: candidate[0],
+                        name: candidate[1],
+                        voteCount: candidate[2]
                     });
                 })
             }
+
+            // for (let i = 1, p = Promise.resolve(); i <= candidatesCount.toNumber() + 1; i++) {
+            //     p = p.then(_ => new Promise(resolve =>
+            //         contract.methods.candidates(i).call().then(candidate => {
+            //             candidates.push({
+            //                 id: candidate[0],
+            //                 name: candidate[1],
+            //                 voteCount: candidate[2]
+            //             });
+            //             resolve();
+            //         })
+            //     ));
+            // }
             dispatch(setCandidates(candidates));
         }).catch(error => {
             // TODO dispatch(fetchStorageValueFailed());
