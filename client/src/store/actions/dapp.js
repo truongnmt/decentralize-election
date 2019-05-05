@@ -109,7 +109,7 @@ export const fetchCandidates = () => {
                 })
             }
 
-            // for (let i = 1, p = Promise.resolve(); i <= candidatesCount.toNumber() + 1; i++) {
+            // for (let i = 1, p = Promise.resolve(); i <= candidatesCount.toNumber(); i++) {
             //     p = p.then(_ => new Promise(resolve =>
             //         contract.methods.candidates(i).call().then(candidate => {
             //             candidates.push({

@@ -37,12 +37,13 @@ class Dummy extends Component {
             return <Spinner />;
         }
 
+        // console.log(this.props.candidates);
         let candidates = this.props.candidates.map(candidate => {
             return (
-                <tr key={candidate.id}>
-                    <td>{candidate.id}</td>
+                <tr key={candidate.id.toNumber()}>
+                    <td>{candidate.id.toNumber()}</td>
                     <td>{candidate.name}</td>
-                    <td>{candidate.voteCount}</td>
+                    <td>{candidate.voteCount.toNumber()}</td>
                 </tr>
             );
         });
@@ -81,7 +82,7 @@ class Dummy extends Component {
 
 const mapStateToProps = state => {
     // console.log("state:");
-    // console.log(state);
+    console.log(state.candidates);
     return {
         web3: state.web3,
         accounts: state.accounts,
