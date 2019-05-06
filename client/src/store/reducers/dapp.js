@@ -30,6 +30,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 candidates: action.candidates
             };
+        case actionTypes.ADD_CANDIDATE:
+            return {
+                ...state,
+                candidates: [...state.candidates, action.candidate]
+            };
         case actionTypes.SET_CANDIDATES_COUNT:
             return {
                 ...state,

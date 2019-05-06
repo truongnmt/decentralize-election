@@ -2,4 +2,5 @@ export const SET_WEB3 = 'SET_WEB3';
 export const SET_ACCOUNTS = 'SET_ACCOUNTS';
 export const SET_CONTRACT = 'SET_CONTRACT';
 export const SET_CANDIDATES = 'SET_CANDIDATES';
+export const ADD_CANDIDATE = 'ADD_CANDIDATE';
 export const SET_CANDIDATES_COUNT = 'SET_CANDIDATES_COUNT';
