@@ -2,36 +2,38 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Spinner from '../../components/UI/Spinner/Spinner';
+import Button from '../../components/UI/Button/Button';
 import * as actions from '../../store/actions/dapp';
 import classes from './Dummy.module.css';
 
 class Dummy extends Component {
+    state = {
+        formSelectedCandidateID: 1
+    }
 
     componentWillMount = () => {
         this.props.onInitWeb3AccountContract();
         // this.props.onFetchCandidates();
     };
 
-    incrementStorageValueHandler = () => {
-        const { accounts, contract } = this.props;
+    castVoteHandler = (event) => {
+        event.preventDefault();
 
-        contract.methods.get().call().then(currentValue => {
-            // Stores a given value
-            // await contract.methods.set(currentValue.toNumber() + 1).send({ from: accounts[0] });
-            contract.methods.set(currentValue.toNumber() + 1).send({ from: accounts[0] })
-                // https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#id15
-                // for another event
-                .on('confirmation', (confirmationNumber) => {
-                    // TODO if (confirmationNumber === 5) {} ???
-                    contract.methods.get().call().then(response => {
-                        // this.props.setStorageValue(response.toNumber());
-                    });
-                })
-                .on('error', (error) => {
-                    console.log(error);
-                });
-        });
+        const { accounts, contract } = this.props;
+        console.log(this.state.formSelectedCandidateID);
+
+        contract.methods.vote(1).send({ from: accounts[0] })
+            .on('confirmation', (confirmationNumber) => {
+                console.log("Confirmation number: " + confirmationNumber);
+                this.props.onFetchCandidates();
+            }).on('error', (error) => {
+                console.log(error);
+            });
     };
+
+    handleFormSelectChangeHandler = e => {
+        this.setState({ formSelectedCandidateID: e.target.value });
+    }
 
     render() {
         if (this.props.candidatesCount === 0) {
@@ -49,6 +51,17 @@ class Dummy extends Component {
             );
         });
 
+        let form = (
+            <form onSubmit={this.castVoteHandler}>
+                <label htmlFor="candidatesSelect">Select Candidates</label>
+                <select id="candidatesSelect" onChange={this.handleFormSelectChangeHandler} >
+                    <option value="1">Candidate 1</option>
+                    <option value="2">Candidate 2</option>
+                </select>
+                <Button btnType="Success">Vote</Button>
+            </form>
+        )
+
         return (
             <div className={classes.Dummy}>
                 <h3>Election Results</h3>
@@ -64,12 +77,9 @@ class Dummy extends Component {
                         {candidates}
                     </tbody>
                 </table>
-                <hr />
 
                 <p>Your account: {this.props.accounts}</p>
-
-                {/* <Button btnType="Success" clicked={this.incrementStorageValueHandler}>ADD</Button> */}
-                {/* <div>The stored value is: {this.props.storageValue}</div> */}
+                {form}
             </div>
         );
     }
