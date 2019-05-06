@@ -68,6 +68,7 @@ export const initWeb3AccountContract = () => {
 
                         // get all candidates
                         const candidates = [];
+                        dispatch(setCandidates(candidates));
                         for (let i = 1; i <= candidatesCount.toNumber(); i++) {
                             instance.methods.candidates(i).call().then(candidate => {
                                 dispatch(addCandidate({
@@ -105,6 +106,7 @@ export const fetchCandidates = () => {
 
             // get all candidates
             const candidates = [];
+            dispatch(setCandidates(candidates));
             for (let i = 1; i <= candidatesCount.toNumber(); i++) {
                 contract.methods.candidates(i).call().then(candidate => {
                     dispatch(addCandidate({

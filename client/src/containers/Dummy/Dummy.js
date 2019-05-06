@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from '../../store/actions/dapp';
+import classes from './Dummy.module.css';
 
 class Dummy extends Component {
 
@@ -48,16 +49,8 @@ class Dummy extends Component {
             );
         });
 
-        // for (let candidate of this.props.candidates) {
-        //     console.log(candidate);
-        // }
-
-        // for (let i = 1; i <= this.props.candidatesCount; i++) {
-        //     candidates = this.props.candidates[i];
-        // }
-
         return (
-            <div>
+            <div className={classes.Dummy}>
                 <h3>Election Results</h3>
                 <table>
                     <thead>
@@ -73,6 +66,8 @@ class Dummy extends Component {
                 </table>
                 <hr />
 
+                <p>Your account: {this.props.accounts}</p>
+
                 {/* <Button btnType="Success" clicked={this.incrementStorageValueHandler}>ADD</Button> */}
                 {/* <div>The stored value is: {this.props.storageValue}</div> */}
             </div>
@@ -81,8 +76,6 @@ class Dummy extends Component {
 }
 
 const mapStateToProps = state => {
-    // console.log("state:");
-    console.log(state.candidates);
     return {
         web3: state.web3,
         accounts: state.accounts,
